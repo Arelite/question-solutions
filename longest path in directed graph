@@ -1,0 +1,36 @@
+from collections import defaultdict
+
+def longestPath(n, edges):
+    if n == 0:
+        return []
+
+    if n == 1:
+        return [0]
+
+    graph = defaultdict(list)
+    for u, v in edges:
+        graph[u].append(v)
+
+    visited = set()
+    memo = {}
+
+    def dfs(node):
+        if node in visited:
+            return float('inf')
+        if node in memo:
+            return memo[node]
+
+        visited.add(node)
+        max_length = 0
+        for neighbor in graph[node]:
+            max_length = max(max_length, dfs(neighbor) + 1)
+        visited.remove(node)
+
+        memo[node] = max_length
+        return max_length
+
+    longest_paths = []
+    for node in range(n):
+        longest_paths.append(dfs(node))
+
+    return longest_paths
